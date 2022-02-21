@@ -7,11 +7,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
     steps:
         - uses: actions/checkout@v2
         - name: Use Node.js version 16
           uses: actions/setup-node@v2
           with:
-             node-version: '16'
-        - run: npm install 
-        - run: npm run build:local --preffix client    
+            node-version: ${{ matrix.node-version }}
+            cache: 'npm'
+        - run: npm ci     
+        - run: npm run build --preffix client --if-present  
